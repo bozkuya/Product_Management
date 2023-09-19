@@ -36,7 +36,7 @@ Develop a Product Service according to the requirements specified below. The API
 
 \`\`\`bash
 # Clone the repository
-git clone [[Repo_URL](https://github.com/bozkuya/Product_Management)]
+git clone https://github.com/bozkuya/Product_Management
 
 # Navigate to the directory
 cd [Project_Directory]
