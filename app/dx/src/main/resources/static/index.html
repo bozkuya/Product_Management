@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ürün Yönetimi</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        /* Login Section */
+        #loginDiv {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        /* Input Styles */
+        input[type="text"],
+        input[type="password"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        /* Button Styles */
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ürün Yönetimi</h1>
+
+    <div id="loginDiv">
+        <h2>Giriş Yap</h2>
+        <input type="text" id="username" placeholder="Kullanıcı Adı">
+        <input type="password" id="password" placeholder="Şifre">
+        <button onclick="login()">Giriş</button>
+    </div>
+
+
+
+    <script>
+        // Simulated user data for demo (In a real-world scenario, this would be fetched from a server)
+        const users = [
+            {
+                username: "admin",
+                password: "1234"
+            }
+        ];
+
+        function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const user = users.find(user => user.username === username && user.password === password);
+
+  if (user) {
+    // Giriş başarılı
+    document.getElementById('loginDiv').style.display = 'none'; // Giriş formunu sakla
+    document.getElementById('afterLogin').style.display = 'block'; // Diğer öğeleri göster
+  } else {
+    alert('Geçersiz kullanıcı adı veya şifre.');
+  }
+}
+
+
+
+    </script>
+    <div id="afterLogin" style="display: none;">
+    <!-- Add Product Section -->
+    <h2>Ürün Ekle</h2>
+    <form id="addProductForm">
+        <input type="text" id="productName" placeholder="Product Name">
+        <input type="text" id="productCode" placeholder="Product Code">
+        <input type="text" id="productDescription" placeholder="Product Description">
+        <input type="text" id="productBrand" placeholder="Product Brand">
+        <input type="text" id="productCurrency" placeholder="Product Currency">
+        <input type="number" id="productPrice" placeholder="Product Price">
+        <input type="number" id="productStock" placeholder="Product Stock">
+        <button type="button" onclick="addProduct()">Ürün Ekle</button>
+    </form>
+
+    <!-- Search Products Section -->
+    <h2>Ürün Ara</h2>
+    <form id="searchProductForm">
+        <input type="text" id="searchName" placeholder="Search Name">
+        <input type="text" id="searchCode" placeholder="Search Code">
+        <input type="text" id="searchBrand" placeholder="Search Brand">
+        <input type="number" id="minPrice" placeholder="Min Price">
+        <input type="number" id="maxPrice" placeholder="Max Price">
+        <button type="button" onclick="searchProducts()">Ara</button>
+    </form>
+
+  
+<!-- Update Product -->
+<h1>Ürün Güncelle</h1>
+<button id="listProductsForUpdate">Güncelle</button>
+<div id="updateProductsDiv"></div>
+
+<script>
+  function updateProduct(id) {
+    const name = prompt('Yeni ürün adını girin:');
+    const code = prompt('Yeni ürün kodunu girin:');
+    const description = prompt('Yeni ürün açıklamasını girin:');
+    const brand = prompt('Yeni markayı girin:');
+    const currency = prompt('Yeni para birimini girin:');
+    const price = prompt('Yeni fiyatı girin:');
+    const stock = prompt('Yeni stok durumunu girin:');
+    
+    if(name && code && description && brand && currency && price && stock) {
+      // Do the AJAX call to update the product
+      $.ajax({
+        url: `/api/products/${id}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          name: name,
+          code: code,
+          description: description,
+          brand: brand,
+          currency: currency,
+          price: parseFloat(price),
+          stock: parseInt(stock)
+        }),
+        success: function() {
+          alert('Ürün başarıyla güncellendi');
+        },
+        error: function() {
+          alert('Ürün güncellenemedi');
+        }
+      });
+    }
+  }
+  
+  $('#listProductsForUpdate').click(function() {
+    $.get('/api/products', function(data) {
+      let productHtml = '<ul>';
+      data.forEach(product => {
+        productHtml += `<li>${product.name} <button onclick="updateProduct(${product.id})">Güncelle</button></li>`;
+      });
+      productHtml += '</ul>';
+      $('#updateProductsDiv').html(productHtml);
+    });
+  });
+  
+</script>
+
+
+    <!-- List Products Section -->
+    <button onclick="fetchProducts()">Tüm Ürünleri Listele</button>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>Currency</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="productList">
+            
+            <!-- Products will go here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to fetch all products
+        function fetchProducts() {
+            fetch("/api/products")
+                .then(response => response.json())
+                .then(data => displayProducts(data));
+        }
+
+        // Function to search products
+        function searchProducts() {
+            const name = document.getElementById("searchName").value;
+            const code = document.getElementById("searchCode").value;
+            const brand = document.getElementById("searchBrand").value;
+            const minPrice = document.getElementById("minPrice").value;
+            const maxPrice = document.getElementById("maxPrice").value;
+
+            const queryParams = new URLSearchParams({ name, code, brand, minPrice, maxPrice }).toString();
+            
+            fetch(`/api/products?${queryParams}`)
+                .then(response => response.json())
+                .then(data => displayProducts(data));
+        }
+
+        // Function to display products
+        function displayProducts(data) {
+            let productTable = document.getElementById("productList");
+            productTable.innerHTML = ""; // Clear existing entries
+                    
+            data.forEach(product => {
+                let row = `
+                    <tr>
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.code}</td>
+                        <td>${product.description}</td>
+                        <td>${product.brand}</td>
+                        <td>${product.currency}</td>
+                        <td>${product.price}</td>
+                        <td>${product.stock}</td>
+                        <td><button onclick="deleteProduct(${product.id})">Sil</button></td>
+                    </tr>`;
+                productTable.innerHTML += row;
+            });
+        }
+
+        // Function to add a product
+        function addProduct() {
+            const name = document.getElementById("productName").value;
+            const code = document.getElementById("productCode").value;
+            const description = document.getElementById("productDescription").value;
+            const brand = document.getElementById("productBrand").value;
+            const currency = document.getElementById("productCurrency").value;
+            const price = document.getElementById("productPrice").value;
+            const stock = document.getElementById("productStock").value;
+
+            fetch("/api/products", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, code, description, brand, currency, price, stock })
+            })
+            .then(response => response.json())
+            .then(data => fetchProducts())
+            .catch(error => console.error(error));
+        }
+        function deleteProduct(id) {
+        fetch(`/api/products/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if(response.ok) {
+            fetchProducts();
+            } else {
+            console.error('Silme işlemi başarısız');
+            }
+        })
+        .catch(error => console.error(error));
+        }
+
+    </script>
+ </div>
+</body>
+</html>

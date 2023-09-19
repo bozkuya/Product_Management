@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ProductApiApplication",
+            "request": "launch",
+            "mainClass": "com.example.dx.ProductApiApplication",
+            "projectName": "dx"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DxApplication<dx>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.dx.DxApplication",
+            "projectName": "dx",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
