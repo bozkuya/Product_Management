@@ -32,14 +32,11 @@ Develop a Product Service according to the requirements specified below. The API
 
 ## Getting Started
 
-### Installation
-
-\`\`\`bash
 # Clone the repository
 git clone https://github.com/bozkuya/Product_Management
 
 # Navigate to the directory
-cd [Project_Directory]
+cd [Your Project Directory]
 
 # Follow further setup instructions for your specific stack
 \`\`\`
