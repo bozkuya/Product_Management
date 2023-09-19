@@ -39,7 +39,7 @@ git clone https://github.com/bozkuya/Product_Management
 cd [Your Project Directory]
 
 # Follow further setup instructions for your specific stack
-\`\`\`
+
 
 
 ## Usage
